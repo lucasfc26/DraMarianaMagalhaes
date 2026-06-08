@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock, Mail, MessageCircle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AvailabilitySlot, Procedure, isSupabaseConfigured, restFetch, toTimeLabel } from "@/lib/supabase";
 
 const whatsappNumber = "5585998420239";
 const clinicEmail = "marianamagalhaes67@hotmail.com";
-const procedures = [
+const defaultProcedures = [
   "Consulta",
   "Limpeza dentária",
   "Restauração",
@@ -42,6 +43,8 @@ type Channel = "whatsapp" | "email";
 
 type Appointment = {
   procedure: string;
+  procedureId: string;
+  slotId: string;
   date: string;
   time: string;
   name: string;
@@ -52,6 +55,8 @@ type Appointment = {
 
 const initialAppointment: Appointment = {
   procedure: "Consulta",
+  procedureId: "",
+  slotId: "",
   date: "",
   time: "",
   name: "",
@@ -60,10 +65,10 @@ const initialAppointment: Appointment = {
   channel: "whatsapp",
 };
 
-function getMonthDays() {
+function getMonthDays(base: Date) {
   const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  const year = base.getFullYear();
+  const month = base.getMonth();
   const total = new Date(year, month + 1, 0).getDate();
 
   return Array.from({ length: total }, (_, index) => {
@@ -77,6 +82,16 @@ function getMonthDays() {
       disabled: date < new Date(today.getFullYear(), today.getMonth(), today.getDate()),
     };
   });
+}
+
+function getMonthLabel(value: Date) {
+  return `${months[value.getMonth()]} de ${value.getFullYear()}`;
+}
+
+function formatDateShort(value: string) {
+  if (!value) return "";
+  const [year, month, day] = value.split("-");
+  return `${day}/${month}/${year}`;
 }
 
 function formatDate(value: string) {
@@ -100,10 +115,32 @@ function buildMessage(data: Appointment) {
 }
 
 export function Contact() {
-  const days = useMemo(() => getMonthDays(), []);
+  const [calendarMonth, setCalendarMonth] = useState(() => {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), 1);
+  });
+  const days = useMemo(() => getMonthDays(calendarMonth), [calendarMonth]);
+  const [procedureOptions, setProcedureOptions] = useState(
+    defaultProcedures.map((name) => ({ id: "", name })),
+  );
+  const [availableSlots, setAvailableSlots] = useState<AvailabilitySlot[]>([]);
   const [step, setStep] = useState(0);
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState<Appointment>(initialAppointment);
+  const [submitError, setSubmitError] = useState("");
+
+  const hasSupabaseProcedures = procedureOptions.some((procedure) => procedure.id);
+  const availableDayValues = new Set(availableSlots.map((slot) => slot.slot_date));
+  const timeOptions =
+    hasSupabaseProcedures && form.date
+      ? availableSlots
+          .filter((slot) => slot.slot_date === form.date)
+          .map((slot) => ({
+            value: toTimeLabel(slot.start_time),
+            label: `${toTimeLabel(slot.start_time)} às ${toTimeLabel(slot.end_time)}`,
+            slotId: slot.id,
+          }))
+      : times.map((time) => ({ value: time, label: time, slotId: "" }));
 
   const steps = [
     { label: "Tipo", valid: Boolean(form.procedure) },
@@ -114,16 +151,95 @@ export function Contact() {
   const canGoNext = steps[step].valid;
   const confirmationMessage = buildMessage(form);
 
-  const resetForm = () => {
-    setForm(initialAppointment);
-    setStep(0);
-    setSent(false);
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    restFetch<Procedure[]>(
+      "procedures?select=id,name,duration_minutes&active=eq.true&order=sort_order.asc,name.asc",
+      {},
+      undefined,
+    )
+      .then((items) => {
+        if (!items.length) return;
+        setProcedureOptions(items.map((item) => ({ id: item.id, name: item.name })));
+        setForm((current) =>
+          current.procedure === "Consulta"
+            ? { ...current, procedure: items[0].name, procedureId: items[0].id }
+            : current,
+        );
+      })
+      .catch(() => {
+        setProcedureOptions(defaultProcedures.map((name) => ({ id: "", name })));
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !form.procedureId || !days[0]) {
+      setAvailableSlots([]);
+      return;
+    }
+
+    const firstDay = days[0].value;
+    const lastDay = days[days.length - 1].value;
+
+    restFetch<AvailabilitySlot[]>(
+      `availability_slots?select=*&or=(procedure_id.is.null,procedure_id.eq.${form.procedureId})&slot_date=gte.${firstDay}&slot_date=lte.${lastDay}&is_available=eq.true&is_booked=eq.false&order=slot_date.asc,start_time.asc`,
+      {},
+      undefined,
+    )
+      .then(setAvailableSlots)
+      .catch(() => setAvailableSlots([]));
+  }, [days, form.procedureId]);
+
+  const changeCalendarMonth = (direction: -1 | 1) => {
+    setCalendarMonth((current) => new Date(current.getFullYear(), current.getMonth() + direction, 1));
+    setForm((current) => ({ ...current, date: "", time: "", slotId: "" }));
   };
 
-  const submit = (event: React.FormEvent) => {
+  const resetForm = () => {
+    const firstProcedure = procedureOptions[0];
+    setForm({
+      ...initialAppointment,
+      procedure: firstProcedure?.name || "Consulta",
+      procedureId: firstProcedure?.id || "",
+    });
+    setStep(0);
+    setSent(false);
+    setSubmitError("");
+  };
+
+  const submit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setSubmitError("");
 
     if (!steps.every((item) => item.valid)) return;
+
+    if (isSupabaseConfigured && form.procedureId) {
+      try {
+        await restFetch(
+          "appointments",
+          {
+            method: "POST",
+            headers: { Prefer: "return=minimal" },
+            body: JSON.stringify({
+              procedure_id: form.procedureId,
+              slot_id: form.slotId || null,
+              procedure_name: form.procedure,
+              patient_name: form.name,
+              patient_contact: form.contact,
+              patient_comment: form.comment || null,
+              channel: form.channel,
+              requested_date: form.date || null,
+              requested_time: form.time || null,
+            }),
+          },
+          undefined,
+        );
+      } catch (error) {
+        setSubmitError(error instanceof Error ? error.message : "Não foi possível registrar o agendamento.");
+        return;
+      }
+    }
 
     const encodedMessage = encodeURIComponent(confirmationMessage);
 
@@ -283,19 +399,33 @@ export function Contact() {
                     <Check className="h-4 w-4" />
                     Procedimento
                   </div>
+                  {submitError && (
+                    <div className="mb-5 border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {procedures.map((procedure) => (
+                    {procedureOptions.map((procedure) => (
                       <button
-                        key={procedure}
+                        key={procedure.id || procedure.name}
                         type="button"
-                        onClick={() => setForm({ ...form, procedure })}
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            procedure: procedure.name,
+                            procedureId: procedure.id,
+                            slotId: "",
+                            date: "",
+                            time: "",
+                          })
+                        }
                         className={`min-h-24 border px-5 py-4 text-left transition-all ${
-                          form.procedure === procedure
+                          form.procedure === procedure.name
                             ? "border-foreground bg-foreground text-background shadow-soft"
                             : "border-foreground/15 hover:border-foreground/50"
                         }`}
                       >
-                        <span className="font-display text-xl leading-tight">{procedure}</span>
+                        <span className="font-display text-xl leading-tight">{procedure.name}</span>
                       </button>
                     ))}
                   </div>
@@ -306,15 +436,33 @@ export function Contact() {
                 <div>
                   <div className="mb-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                     <CalendarDays className="h-4 w-4" />
-                    Dias de {days[0]?.month}
+                    Dias de {getMonthLabel(calendarMonth)}
+                  </div>
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={() => changeCalendarMonth(-1)}
+                      className="inline-flex items-center gap-2 rounded-full border border-foreground/25 px-4 py-2 text-[10px] uppercase tracking-[0.2em]"
+                    >
+                      <ArrowLeft className="h-3.5 w-3.5" />
+                      Mês anterior
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => changeCalendarMonth(1)}
+                      className="inline-flex items-center gap-2 rounded-full border border-foreground/25 px-4 py-2 text-[10px] uppercase tracking-[0.2em]"
+                    >
+                      Próximo mês
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {days.map((item) => (
                       <button
                         key={item.value}
                         type="button"
-                        disabled={item.disabled}
-                        onClick={() => setForm({ ...form, date: item.value })}
+                        disabled={item.disabled || (hasSupabaseProcedures && !availableDayValues.has(item.value))}
+                        onClick={() => setForm({ ...form, date: item.value, time: "", slotId: "" })}
                         className={`min-h-20 border px-4 py-3 text-left transition-all disabled:pointer-events-none disabled:opacity-35 ${
                           form.date === item.value
                             ? "border-foreground bg-foreground text-background shadow-soft"
@@ -322,6 +470,7 @@ export function Contact() {
                         }`}
                       >
                         <div className="font-display text-3xl leading-none">{item.day}</div>
+                        <div className="mt-1 text-xs">{formatDateShort(item.value)}</div>
                         <div className="mt-2 text-[10px] uppercase tracking-[0.2em]">{item.weekday}</div>
                       </button>
                     ))}
@@ -335,19 +484,24 @@ export function Contact() {
                     <Clock className="h-4 w-4" />
                     Horários
                   </div>
+                  {timeOptions.length === 0 && (
+                    <div className="mb-5 border border-dashed border-foreground/20 p-5 text-sm text-muted-foreground">
+                      Não há horários disponíveis para este dia.
+                    </div>
+                  )}
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                    {times.map((time) => (
+                    {timeOptions.map((time) => (
                       <button
-                        key={time}
+                        key={`${time.value}-${time.slotId}`}
                         type="button"
-                        onClick={() => setForm({ ...form, time })}
+                        onClick={() => setForm({ ...form, time: time.value, slotId: time.slotId })}
                         className={`min-h-16 border px-4 py-3 font-display text-2xl transition-all ${
-                          form.time === time
+                          form.time === time.value && form.slotId === time.slotId
                             ? "border-foreground bg-foreground text-background shadow-soft"
                             : "border-foreground/15 hover:border-foreground/50"
                         }`}
                       >
-                        {time}
+                        <span className="text-xl leading-tight">{time.label}</span>
                       </button>
                     ))}
                   </div>
@@ -356,6 +510,11 @@ export function Contact() {
 
               {step === 3 && (
                 <div className="space-y-7">
+                  {submitError && (
+                    <div className="border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">

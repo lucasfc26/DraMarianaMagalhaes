@@ -27,7 +27,7 @@ export function Navbar() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10 flex items-center justify-between">
-        <a href="#top" className="flex items-center gap-3 group">
+        <a href="/admin/login" className="flex items-center gap-3 group" aria-label="Acesso administrativo">
           <div className="w-9 h-9 rounded-full border border-foreground/30 flex items-center justify-center font-display text-base text-foreground group-hover:bg-accent group-hover:border-accent transition-all duration-500">
             M
           </div>
