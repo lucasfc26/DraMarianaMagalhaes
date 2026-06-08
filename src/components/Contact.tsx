@@ -157,7 +157,7 @@ export function Contact() {
       : times.map((time) => ({ value: time, label: time, slotId: "" }));
 
   const steps = [
-    { label: "Tipo", valid: Boolean(form.procedure) },
+    { label: "Proced", valid: Boolean(form.procedure) },
     { label: "Dia", valid: Boolean(form.date) },
     { label: "Horário", valid: Boolean(form.time) },
     { label: "Dados", valid: Boolean(form.name.trim() && form.contact.trim()) },
