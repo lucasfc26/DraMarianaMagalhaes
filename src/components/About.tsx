@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 
 const stats = [
-  { n: "10+", l: "Anos de prática" },
-  { n: "1.2k", l: "Sorrisos transformados" },
-  { n: "98%", l: "Satisfação clínica" },
-  { n: "24", l: "Especializações" },
+  { n: "CRO", l: "Registro ativo" },
+  { n: "1:1", l: "Plano individual" },
+  { n: "24h", l: "Retorno de agenda" },
+  { n: "360", l: "Cuidado bucal e facial" },
 ];
 
 export function About() {
@@ -36,14 +36,17 @@ export function About() {
             className="lg:col-span-6 lg:col-start-7 space-y-6"
           >
             <p className="text-lg leading-relaxed text-foreground/85">
-              Trabalho na intersecção entre ciência odontológica e estética
-              editorial. Cada plano é pensado como um portfólio: composição,
-              proporção e identidade — para devolver não só função, mas presença.
+              A proposta da clínica é unir escuta, avaliação detalhada e execução
+              cuidadosa para que cada paciente entenda suas opções antes de iniciar
+              o tratamento. O foco está em saúde, conforto e resultados que respeitam
+              a individualidade de cada rosto e sorriso.
             </p>
             <p className="text-base leading-relaxed text-muted-foreground">
-              Especialista em reabilitação oral minimamente invasiva e design
-              digital do sorriso, com formação internacional e foco em pacientes
-              que valorizam discrição, durabilidade e refinamento visual.
+              No consultório, a Dra. Mariana realiza desde procedimentos essenciais,
+              como limpeza, restaurações, placas para DTM/bruxismo e urgências, até
+              clareamento dental, atendimento pediátrico e protocolos de estética
+              facial como botox, skinbooster, preenchimentos, bioestimuladores de
+              colágeno e fios lisos.
             </p>
           </motion.div>
         </div>

@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 
 const steps = [
-  { n: "01", t: "Diagnóstico", d: "Anamnese, fotografia clínica e escaneamento digital 3D." },
-  { n: "02", t: "Planejamento", d: "Design digital do sorriso com simulação realista pré-aprovada." },
-  { n: "03", t: "Mockup", d: "Provisório experimental para validar estética e função na boca." },
-  { n: "04", t: "Execução", d: "Protocolo clínico minimamente invasivo, sessões controladas." },
-  { n: "05", t: "Refinamento", d: "Polimento, ajustes oclusais e checagem de croma final." },
-  { n: "06", t: "Acompanhamento", d: "Manutenção, fotografia evolutiva e revisão semestral." },
+  { n: "01", t: "Escuta", d: "Conversa inicial para entender queixa, histórico, rotina e objetivo do atendimento." },
+  { n: "02", t: "Avaliação", d: "Exame clínico cuidadoso e, quando necessário, solicitação de registros complementares." },
+  { n: "03", t: "Orientação", d: "Explicação das opções de tratamento, indicações, cuidados e expectativas reais." },
+  { n: "04", t: "Planejamento", d: "Definição do melhor caminho para saúde bucal, estética dental ou harmonização facial." },
+  { n: "05", t: "Execução", d: "Procedimento realizado com atenção ao conforto, à segurança e aos detalhes técnicos." },
+  { n: "06", t: "Acompanhamento", d: "Retorno, ajustes e orientações para manter o resultado e prevenir novos problemas." },
 ];
 
 export function Process() {

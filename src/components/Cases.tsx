@@ -8,57 +8,57 @@ import antes5 from "@/assets/Antes5.jpeg";
 import antes6 from "@/assets/Antes6.jpeg";
 import depois1 from "@/assets/Depois1.jpeg";
 import depois2 from "@/assets/Depois2.jpeg";
-import depois3 from "@/assets/Depois3.jpeg";
+import depois3 from "@/assets/Depois3.jpg";
 import depois4 from "@/assets/Depois4.jpeg";
 import depois5 from "@/assets/Depois5.jpeg";
 import depois6 from "@/assets/Depois6.jpeg";
 
 const cases = [
   {
-    tag: "Harmonização",
-    t: "Caso 01 · Evolução labial",
-    d: "Comparativo clínico com registro fotográfico de antes e depois.",
+    tag: "Preenchimento labial",
+    t: "Caso 01 · Preenchimento labial",
+    d: "Realce de contorno e volume labial com planejamento para um resultado natural.",
     before: antes1,
     after: depois1,
   },
   {
-    tag: "Harmonização",
-    t: "Caso 02 · Contorno e volume",
-    d: "Resultado acompanhado em consultório com foco em naturalidade.",
+    tag: "Preenchimento labial",
+    t: "Caso 02 · Preenchimento labial",
+    d: "Harmonização dos lábios com foco em proporção, hidratação e delicadeza.",
     before: antes2,
     after: depois2,
   },
   {
-    tag: "Estética Facial",
-    t: "Caso 03 · Proporção facial",
-    d: "Planejamento individualizado para equilíbrio e expressão.",
+    tag: "Clareamento",
+    t: "Caso 03 · Clareamento dental",
+    d: "Evolução do sorriso com protocolo clareador acompanhado em consultório.",
     before: antes3,
     after: depois3,
   },
   {
-    tag: "Estética Facial",
-    t: "Caso 04 · Refinamento estético",
-    d: "Intervenção delicada com leitura anatômica personalizada.",
+    tag: "Botox",
+    t: "Caso 04 · Aplicação de botox",
+    d: "Suavização de marcas de expressão com avaliação individualizada da face.",
     before: antes4,
     after: depois4,
   },
   {
-    tag: "Rejuvenescimento",
-    t: "Caso 05 · Renovação clínica",
-    d: "Acompanhamento visual do resultado em diferentes ângulos.",
+    tag: "Botox",
+    t: "Caso 05 · Aplicação de botox",
+    d: "Resultado acompanhado para preservar expressão, leveza e naturalidade.",
     before: antes5,
     after: depois5,
   },
   {
-    tag: "Rejuvenescimento",
-    t: "Caso 06 · Resultado natural",
-    d: "Comparativo fotográfico para demonstrar a evolução do caso.",
+    tag: "Botox",
+    t: "Caso 06 · Aplicação de botox",
+    d: "Comparativo fotográfico de antes e depois com foco em estética facial natural.",
     before: antes6,
     after: depois6,
   },
 ];
 
-const filters = ["Todos", "Harmonização", "Estética Facial", "Rejuvenescimento"];
+const filters = ["Todos", "Preenchimento labial", "Clareamento", "Botox"];
 
 type CaseItem = (typeof cases)[number];
 

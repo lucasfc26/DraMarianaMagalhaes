@@ -4,7 +4,23 @@ import { useMemo, useState } from "react";
 
 const whatsappNumber = "5585998420239";
 const clinicEmail = "marianamagalhaes67@hotmail.com";
-const procedures = ["Consulta", "Limpeza", "Clareamento", "Botox", "HOF"];
+const procedures = [
+  "Consulta",
+  "Limpeza dentária",
+  "Restauração",
+  "Placa DTM/bruxismo",
+  "Urgência odontológica",
+  "Atendimento pediátrico",
+  "Clareamento consultório",
+  "Clareamento caseiro",
+  "Botox",
+  "Skinbooster",
+  "Preenchimento labial",
+  "Preenchimento de mento",
+  "Preenchimento de malar",
+  "Bioestimuladores",
+  "Fios lisos",
+];
 const times = Array.from({ length: 11 }, (_, index) => `${String(index + 8).padStart(2, "0")}:00`);
 const weekdays = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
 const months = [
@@ -90,7 +106,7 @@ export function Contact() {
   const [form, setForm] = useState<Appointment>(initialAppointment);
 
   const steps = [
-    { label: "Proced", valid: Boolean(form.procedure) },
+    { label: "Tipo", valid: Boolean(form.procedure) },
     { label: "Dia", valid: Boolean(form.date) },
     { label: "Horário", valid: Boolean(form.time) },
     { label: "Dados", valid: Boolean(form.name.trim() && form.contact.trim()) },
@@ -279,7 +295,7 @@ export function Contact() {
                             : "border-foreground/15 hover:border-foreground/50"
                         }`}
                       >
-                        <span className="font-display text-2xl">{procedure}</span>
+                        <span className="font-display text-xl leading-tight">{procedure}</span>
                       </button>
                     ))}
                   </div>

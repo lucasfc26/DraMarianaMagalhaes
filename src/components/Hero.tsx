@@ -4,9 +4,9 @@ import heroImg from "@/assets/hero-mariana.png";
 
 const roles = [
   "Cirurgiã-Dentista",
-  "Design do Sorriso",
-  "Reabilitação Oral",
-  "Estética Dental",
+  "Odontologia Geral",
+  "Estética Facial",
+  "Harmonização Orofacial",
 ];
 
 export function Hero() {
@@ -32,8 +32,8 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.2 }}
           className="flex items-center justify-between text-[10px] tracking-[0.4em] uppercase text-muted-foreground mb-12"
         >
-          <span>Efeito Dominó Reverso</span>
-          <span className="hidden md:block">Editorial · Clínico · 2026</span>
+          <span>Cirurgiã-Dentista · CROCE-17697</span>
+          <span className="hidden md:block">Fortaleza/CE · 2026</span>
         </motion.div>
 
         <div className="grid lg:grid-cols-12 gap-12 items-center">
@@ -45,12 +45,12 @@ export function Hero() {
               transition={{ duration: 1.2, delay: 0.3 }}
               className="font-display text-[14vw] sm:text-[10vw] lg:text-[7.5vw] leading-[0.9] tracking-tight"
             >
-              Excelência<br />
-              <span className="italic text-gold-gradient">Clínica</span>
+              Cuidado<br />
+              <span className="italic text-gold-gradient">Dental</span>
               <br />
-              <span className="text-foreground/80">&amp; Design</span>
+              <span className="text-foreground/80">&amp; Estética</span>
               <br />
-              <span className="italic">Editorial</span>
+              <span className="italic">Natural</span>
             </motion.h1>
 
             <motion.div
@@ -79,8 +79,9 @@ export function Hero() {
               transition={{ duration: 1, delay: 1.1 }}
               className="mt-8 max-w-md text-base text-muted-foreground leading-relaxed"
             >
-              Salvar um dente pode evitar problemas em toda a boca. Uma abordagem
-              que une precisão médica à estética refinada de um portfólio criativo.
+              Atendimento próximo para cuidar da saúde bucal, aliviar dores e
+              valorizar sua beleza com procedimentos odontológicos e faciais feitos
+              com planejamento, delicadeza e naturalidade.
             </motion.p>
 
             <motion.div
@@ -94,14 +95,14 @@ export function Hero() {
                 className="group relative inline-flex items-center gap-3 px-7 py-4 rounded-full bg-foreground text-background text-xs uppercase tracking-[0.25em] overflow-hidden transition-transform duration-500 hover:scale-[1.02]"
               >
                 <span className="absolute inset-0 gradient-gold opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <span className="relative">Ver Casos</span>
+                <span className="relative">Ver Resultados</span>
                 <span className="relative w-2 h-2 rounded-full bg-current" />
               </a>
               <a
                 href="#contato"
                 className="inline-flex items-center gap-3 px-7 py-4 rounded-full border border-foreground/40 text-xs uppercase tracking-[0.25em] hover:border-foreground transition-all duration-500"
               >
-                Entrar em Contato
+                Agendar Consulta
               </a>
             </motion.div>
           </div>
@@ -122,12 +123,18 @@ export function Hero() {
                 loading="eager"
               />
               <div className="absolute top-5 left-5 right-5 flex justify-between text-[9px] tracking-[0.3em] uppercase text-foreground/70">
-                <span>Dra. Mariana</span>
-                <span>CRO/SP</span>
+                <div className="flex flex-col">
+                  <span>Dra. Mariana Magalhães</span>
+                  <span>Cirurgiã-Dentista</span>
+                </div>
+                <div className="flex flex-col">
+                  <span>CROCE-17697</span>
+                  <span>Fortaleza/CE</span>
+                </div>
               </div>
               <div className="absolute bottom-5 left-5 right-5 font-display italic text-foreground/80">
-                <div className="text-[10px] tracking-[0.3em] uppercase not-italic">Efeito</div>
-                <div className="text-3xl leading-none">Dominó Reverso</div>
+                <div className="text-[10px] tracking-[0.3em] uppercase not-italic">Atendimento</div>
+                <div className="text-3xl leading-none">Odontologia & Estética</div>
               </div>
             </div>
             <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full border border-gold/50 hidden lg:block animate-float" />

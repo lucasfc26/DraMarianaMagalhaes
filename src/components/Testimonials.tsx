@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 
 const items = [
-  { q: "Mariana enxerga o sorriso como obra de arte. Saí do consultório com presença renovada.", a: "Sofia A.", r: "Facetas" },
-  { q: "Precisão impecável e estética que respeita quem você é. Recomendo sem reservas.", a: "Carlos M.", r: "Reabilitação" },
-  { q: "Atendimento editorial. Cada detalhe pensado, do diagnóstico ao polimento final.", a: "Beatriz L.", r: "Ortodontia" },
+  { q: "Meu clareamento ficou leve e natural. A Dra. Mariana explicou tudo com cuidado e acompanhou cada etapa.", a: "Mariana C.", r: "Clareamento" },
+  { q: "Eu queria valorizar os lábios sem exagero, e o preenchimento ficou delicado, proporcional e do jeito que imaginei.", a: "Rhomara C.", r: "Preenchimento labial" },
+  { q: "A aplicação de botox suavizou minhas expressões sem tirar minha naturalidade. Me senti muito segura no atendimento.", a: "Gabryellen R.", r: "Botox" },
 ];
 
 export function Testimonials() {

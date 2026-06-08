@@ -72,16 +72,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dra. Mariana Magalhães — Cirurgiã-Dentista | Estética & Reabilitação" },
-      { name: "description", content: "Excelência clínica e design editorial em odontologia. Reabilitação oral, design do sorriso e estética dental de alto padrão." },
+      { title: "Dra. Mariana Magalhães — Cirurgiã-Dentista | Odontologia & Estética" },
+      { name: "description", content: "Atendimento odontológico e estética facial em Fortaleza/CE: limpeza, restauração, urgência, clareamento, botox, skinbooster e preenchimentos." },
       { name: "author", content: "Dra. Mariana Magalhães" },
-      { property: "og:title", content: "Dra. Mariana Magalhães — Cirurgiã-Dentista | Estética & Reabilitação" },
-      { property: "og:description", content: "Excelência clínica e design editorial em odontologia. Reabilitação oral, design do sorriso e estética dental de alto padrão." },
+      { property: "og:title", content: "Dra. Mariana Magalhães — Cirurgiã-Dentista | Odontologia & Estética" },
+      { property: "og:description", content: "Atendimento odontológico e estética facial em Fortaleza/CE: limpeza, restauração, urgência, clareamento, botox, skinbooster e preenchimentos." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Dra. Mariana Magalhães — Cirurgiã-Dentista | Estética & Reabilitação" },
-      { name: "twitter:description", content: "Excelência clínica e design editorial em odontologia. Reabilitação oral, design do sorriso e estética dental de alto padrão." },
+      { name: "twitter:title", content: "Dra. Mariana Magalhães — Cirurgiã-Dentista | Odontologia & Estética" },
+      { name: "twitter:description", content: "Atendimento odontológico e estética facial em Fortaleza/CE: limpeza, restauração, urgência, clareamento, botox, skinbooster e preenchimentos." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9c3e6246-069f-4f34-9736-bf9f39486be6/id-preview-cbb4418e--a0f732c8-2dff-4e92-9990-49cc3e8b44f5.lovable.app-1778691145878.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9c3e6246-069f-4f34-9736-bf9f39486be6/id-preview-cbb4418e--a0f732c8-2dff-4e92-9990-49cc3e8b44f5.lovable.app-1778691145878.png" },
     ],
@@ -100,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>

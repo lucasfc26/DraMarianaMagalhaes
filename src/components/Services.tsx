@@ -1,12 +1,18 @@
 import { motion } from "framer-motion";
 
 const services = [
-  { n: "01", t: "Reabilitação Oral", d: "Restauração completa da função e estética com materiais premium e técnicas minimamente invasivas." },
-  { n: "02", t: "Design do Sorriso", d: "Planejamento digital personalizado para harmonização orofacial e estética dental de alto padrão." },
-  { n: "03", t: "Facetas em Cerâmica", d: "Lentes ultrafinas com escultura artesanal — naturalidade e durabilidade editorial." },
-  { n: "04", t: "Implantodontia", d: "Cirurgia guiada digital com prótese imediata e protocolo estético invisível." },
-  { n: "05", t: "Clareamento Avançado", d: "Protocolos in-office e supervisionados com controle de sensibilidade e croma." },
-  { n: "06", t: "Ortodontia Invisível", d: "Alinhadores transparentes com planejamento 3D e acompanhamento próximo." },
+  { t: "Limpeza Dentária", d: "Profilaxia para remover placa, tártaro e manchas superficiais, ajudando a manter gengivas e dentes saudáveis." },
+  { t: "Restauração", d: "Tratamento de cáries e fraturas com foco em recuperar função, conforto e aparência natural do dente." },
+  { t: "Placa Miorrelaxante", d: "Placas para DTM e bruxismo, indicadas após avaliação para proteger dentes e reduzir sobrecargas musculares." },
+  { t: "Urgência Odontológica", d: "Atendimento para dor, trauma, inflamações e situações que precisam de avaliação odontológica rápida." },
+  { t: "Atendimento Pediátrico", d: "Cuidado acolhedor para crianças, com orientação preventiva e adaptação respeitosa ao consultório." },
+  { t: "Clareamento Dentário", d: "Protocolos em consultório e caseiros supervisionados para clarear o sorriso com controle profissional." },
+  { t: "Botox", d: "Aplicação planejada para suavizar marcas de expressão e apoiar uma estética facial leve e equilibrada." },
+  { t: "Skinbooster", d: "Hidratação profunda da pele com injetáveis, indicada para melhorar viço, textura e qualidade cutânea." },
+  { t: "Preenchimento Labial", d: "Volume, contorno e hidratação dos lábios com planejamento para preservar naturalidade e proporção." },
+  { t: "Preenchimento de Mento", d: "Harmonização do queixo para melhorar perfil, sustentação visual e equilíbrio facial." },
+  { t: "Preenchimento de Malar", d: "Realce da maçã do rosto para valorizar contornos e pontos de luz da face." },
+  { t: "Bioestimuladores e Fios", d: "Bioestimuladores de colágeno e fios lisos para cuidado com firmeza, textura e qualidade da pele." },
 ];
 
 export function Services() {
@@ -16,23 +22,24 @@ export function Services() {
         <div className="flex items-end justify-between flex-wrap gap-6 mb-20">
           <div>
             <div className="text-[10px] tracking-[0.4em] uppercase text-muted-foreground mb-6">
-              ⟶ Especialidades
+              ⟶ Procedimentos
             </div>
             <h2 className="font-display text-5xl md:text-7xl leading-[1.05] max-w-2xl">
-              Áreas de<br />
-              <span className="italic">Especialidade</span>
+              Tratamentos<br />
+              <span className="italic">realizados</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-            Procedimentos selecionados, protocolados e executados com precisão
-            milimétrica e cuidado editorial em cada detalhe.
+            Da prevenção odontológica à estética facial, cada procedimento começa
+            com avaliação individual e orientação clara sobre indicação, cuidados
+            e expectativas.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/60 border border-border/60">
           {services.map((s, i) => (
             <motion.div
-              key={s.n}
+              key={s.t}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -41,7 +48,9 @@ export function Services() {
             >
               <div className="absolute top-0 left-0 w-0 h-0.5 bg-gold group-hover:w-full transition-all duration-700" />
               <div className="flex items-start justify-between mb-12">
-                <span className="font-mono text-xs text-muted-foreground">{s.n} / 06</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {String(i + 1).padStart(2, "0")} / {String(services.length).padStart(2, "0")}
+                </span>
                 <span className="w-8 h-8 rounded-full border border-foreground/20 flex items-center justify-center text-foreground/50 group-hover:border-accent group-hover:text-accent group-hover:rotate-45 transition-all duration-500">
                   ↗
                 </span>

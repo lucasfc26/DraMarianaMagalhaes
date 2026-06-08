@@ -1,4 +1,12 @@
 export function Footer() {
+  const links = [
+    { href: "#sobre", label: "Sobre" },
+    { href: "#especialidades", label: "Tratamentos" },
+    { href: "#casos", label: "Casos" },
+    { href: "#processo", label: "Processo" },
+    { href: "#contato", label: "Contato" },
+  ];
+
   return (
     <footer className="relative bg-noir text-cream pt-24 pb-10 overflow-hidden">
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 font-display text-[20vw] leading-none text-cream/[0.04] pointer-events-none whitespace-nowrap">
@@ -11,16 +19,16 @@ export function Footer() {
             <div className="font-display text-4xl">Mariana Magalhães</div>
             <div className="text-[10px] tracking-[0.4em] uppercase text-cream/50 mt-2">Cirurgiã-Dentista</div>
             <p className="mt-8 text-sm text-cream/60 max-w-sm leading-relaxed italic font-display text-lg">
-              "Cada sorriso é uma assinatura — e a sua merece ser editorial."
+              "Cuidar do sorriso também é cuidar da forma como você se sente."
             </p>
           </div>
           <div className="md:col-span-3">
             <div className="text-[10px] tracking-[0.4em] uppercase text-cream/50 mb-5">Navegar</div>
             <ul className="space-y-3 text-sm">
-              {["Sobre", "Especialidades", "Casos", "Processo", "Contato"].map((l) => (
-                <li key={l}>
-                  <a href={`#${l.toLowerCase()}`} className="text-cream/80 hover:text-gold transition-colors">
-                    {l}
+              {links.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="text-cream/80 hover:text-gold transition-colors">
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -43,7 +51,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-cream/10 flex flex-wrap items-center justify-between gap-4 text-[10px] tracking-[0.3em] uppercase text-cream/40">
           <span>© 2026 Dra. Mariana Magalhães · CROCE-17697</span>
-          <span>MaselCorp Design & Professional Odontological System</span>
+          <span>MaselCorp Design · Odontologia & Estética</span>
         </div>
       </div>
     </footer>
