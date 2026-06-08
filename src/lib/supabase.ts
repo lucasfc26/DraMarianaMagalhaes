@@ -10,6 +10,7 @@ export type AdminSession = {
 
 export type Procedure = {
   id: string;
+  admin_profile_id: string;
   name: string;
   description: string | null;
   duration_minutes: number;
@@ -19,6 +20,7 @@ export type Procedure = {
 
 export type AvailabilitySlot = {
   id: string;
+  admin_profile_id: string;
   procedure_id: string | null;
   allowed_procedure_ids: string[] | null;
   slot_date: string;
@@ -32,6 +34,7 @@ export type AvailabilitySlot = {
 
 export type Appointment = {
   id: string;
+  admin_profile_id: string;
   procedure_id: string | null;
   slot_id: string | null;
   procedure_name: string;
@@ -47,6 +50,8 @@ export type Appointment = {
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+export const schedulingAdminProfileId = (import.meta.env.VITE_SCHEDULING_ADMIN_PROFILE_ID as string | undefined) ||
+  "ba6c63bb-60d9-4398-a678-92b5b29b881d";
 const sessionKey = "dra-mariana-admin-session";
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);

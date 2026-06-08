@@ -9,6 +9,7 @@ import { Process } from "@/components/Process";
 import { Testimonials } from "@/components/Testimonials";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { CookieConsentGate } from "@/components/CookieConsentGate";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -16,17 +17,19 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="relative bg-background text-foreground overflow-x-hidden">
-      <SmoothScroll />
-      <Navbar />
-      <Hero />
-      <About />
-      <Services />
-      <Cases />
-      <Process />
-      <Testimonials />
-      <Contact />
-      <Footer />
-    </main>
+    <CookieConsentGate>
+      <main className="relative bg-background text-foreground overflow-x-hidden">
+        <SmoothScroll />
+        <Navbar />
+        <Hero />
+        <About />
+        <Services />
+        <Cases />
+        <Process />
+        <Testimonials />
+        <Contact />
+        <Footer />
+      </main>
+    </CookieConsentGate>
   );
 }

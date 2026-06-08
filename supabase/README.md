@@ -24,6 +24,7 @@ values ('AUTH_USER_ID_AQUI', 'staff@professionalodontosys.com.br', 'Dra. Mariana
 ```env
 VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
+VITE_SCHEDULING_ADMIN_PROFILE_ID=ba6c63bb-60d9-4398-a678-92b5b29b881d
 ```
 
 5. Configure os secrets das Edge Functions:

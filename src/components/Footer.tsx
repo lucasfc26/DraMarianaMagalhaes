@@ -46,6 +46,14 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+            <div className="mt-8 flex flex-wrap gap-4 text-[10px] uppercase tracking-[0.22em] text-cream/45">
+              <a href="/termos-de-uso" className="hover:text-gold transition-colors">
+                Termos de uso
+              </a>
+              <a href="/politica-de-privacidade" className="hover:text-gold transition-colors">
+                Privacidade
+              </a>
+            </div>
           </div>
         </div>
 

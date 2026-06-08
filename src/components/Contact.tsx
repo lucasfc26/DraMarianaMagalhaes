@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock, Mail, MessageCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { AvailabilitySlot, Procedure, isSupabaseConfigured, restFetch, toTimeLabel } from "@/lib/supabase";
+import {
+  AvailabilitySlot,
+  Procedure,
+  isSupabaseConfigured,
+  restFetch,
+  schedulingAdminProfileId,
+  toTimeLabel,
+} from "@/lib/supabase";
 
 const whatsappNumber = "5585998420239";
 const clinicEmail = "marianamagalhaes67@hotmail.com";
@@ -162,7 +169,7 @@ export function Contact() {
     if (!isSupabaseConfigured) return;
 
     restFetch<Procedure[]>(
-      "procedures?select=id,name,duration_minutes&active=eq.true&order=sort_order.asc,name.asc",
+      `procedures?select=id,admin_profile_id,name,duration_minutes&admin_profile_id=eq.${schedulingAdminProfileId}&active=eq.true&order=sort_order.asc,name.asc`,
       {},
       undefined,
     )
@@ -190,7 +197,7 @@ export function Contact() {
     const lastDay = days[days.length - 1].value;
 
     restFetch<AvailabilitySlot[]>(
-      `availability_slots?select=*&slot_date=gte.${firstDay}&slot_date=lte.${lastDay}&is_available=eq.true&is_booked=eq.false&order=slot_date.asc,start_time.asc`,
+      `availability_slots?select=*&admin_profile_id=eq.${schedulingAdminProfileId}&slot_date=gte.${firstDay}&slot_date=lte.${lastDay}&is_available=eq.true&is_booked=eq.false&order=slot_date.asc,start_time.asc`,
       {},
       undefined,
     )
