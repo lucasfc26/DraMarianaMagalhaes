@@ -20,6 +20,7 @@ export type Procedure = {
 export type AvailabilitySlot = {
   id: string;
   procedure_id: string | null;
+  allowed_procedure_ids: string[] | null;
   slot_date: string;
   start_time: string;
   end_time: string;

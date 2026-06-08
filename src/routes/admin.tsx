@@ -124,7 +124,7 @@ function AdminDashboard() {
   });
 
   const [newSlot, setNewSlot] = useState({
-    procedure_id: "any",
+    selected_procedure_ids: [] as string[],
     mode: "single" as "single" | "repeat",
     slot_date: isoDate(),
     start_date: isoDate(),
@@ -171,7 +171,12 @@ function AdminDashboard() {
       setSlots(slotData);
       setAppointments(appointmentData);
 
-      setNewSlot((current) => ({ ...current, procedure_id: current.procedure_id || "any" }));
+      setNewSlot((current) => ({
+        ...current,
+        selected_procedure_ids: current.selected_procedure_ids.length
+          ? current.selected_procedure_ids
+          : procedureData.map((procedure) => procedure.id),
+      }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Não foi possível carregar o painel.");
     } finally {
@@ -206,6 +211,19 @@ function AdminDashboard() {
 
   const monthSlots = slots.filter((slot) => slot.slot_date.startsWith(month));
   const activeProcedures = procedures.filter((procedure) => procedure.active);
+  const allProceduresSelected =
+    activeProcedures.length > 0 && newSlot.selected_procedure_ids.length === activeProcedures.length;
+
+  const procedureLabelForSlot = (slot: AvailabilitySlot) => {
+    if (slot.procedure_id) return slot.procedures?.name || "Procedimento";
+    if (!slot.allowed_procedure_ids?.length) return "Qualquer procedimento";
+
+    const names = slot.allowed_procedure_ids
+      .map((id) => procedures.find((procedure) => procedure.id === id)?.name)
+      .filter(Boolean);
+
+    return names.length ? names.join(", ") : "Procedimentos selecionados";
+  };
 
   const logout = () => {
     clearAdminSession();
@@ -267,11 +285,21 @@ function AdminDashboard() {
 
       const startMinutes = timeToMinutes(newSlot.start_time);
       const endMinutes = timeToMinutes(newSlot.end_time);
+      const selectedProcedureIds = newSlot.selected_procedure_ids.filter((id) =>
+        activeProcedures.some((procedure) => procedure.id === id),
+      );
+      const allowedProcedureIds = selectedProcedureIds.length === activeProcedures.length ? null : selectedProcedureIds;
+
+      if (!selectedProcedureIds.length) {
+        throw new Error("Selecione pelo menos um procedimento para este horário.");
+      }
+
       const slotsToCreate = targetDates.flatMap((date) => {
         const blocks = [];
         for (let current = startMinutes; current + newSlot.interval_minutes <= endMinutes; current += newSlot.interval_minutes) {
           blocks.push({
-            procedure_id: newSlot.procedure_id === "any" ? null : newSlot.procedure_id,
+            procedure_id: null,
+            allowed_procedure_ids: allowedProcedureIds,
             slot_date: date,
             start_time: minutesToTime(current),
             end_time: minutesToTime(current + newSlot.interval_minutes),
@@ -516,20 +544,64 @@ function AdminDashboard() {
                   <div className="mb-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                     Novo horário
                   </div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground">Procedimento</label>
-                  <select
-                    value={newSlot.procedure_id}
-                    onChange={(event) => setNewSlot({ ...newSlot, procedure_id: event.target.value })}
-                    className="mt-3 w-full border border-foreground/20 bg-background px-4 py-3 text-sm"
-                    required
-                  >
-                    <option value="any">Qualquer procedimento</option>
-                    {activeProcedures.map((procedure) => (
-                      <option key={procedure.id} value={procedure.id}>
-                        {procedure.name}
-                      </option>
-                    ))}
-                  </select>
+                  <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Procedimentos permitidos
+                  </label>
+                  <div className="mt-3 space-y-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNewSlot({
+                          ...newSlot,
+                          selected_procedure_ids: allProceduresSelected
+                            ? []
+                            : activeProcedures.map((procedure) => procedure.id),
+                        })
+                      }
+                      className={`flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-all ${
+                        allProceduresSelected
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-foreground/20"
+                      }`}
+                    >
+                      <span
+                        className={`flex h-4 w-4 items-center justify-center border ${
+                          allProceduresSelected ? "border-background" : "border-foreground/40"
+                        }`}
+                      >
+                        {allProceduresSelected && <Check className="h-3 w-3" />}
+                      </span>
+                      Qualquer procedimento
+                    </button>
+
+                    <div className="max-h-56 space-y-2 overflow-y-auto pr-1">
+                      {activeProcedures.map((procedure) => {
+                        const checked = newSlot.selected_procedure_ids.includes(procedure.id);
+                        return (
+                          <button
+                            key={procedure.id}
+                            type="button"
+                            onClick={() =>
+                              setNewSlot({
+                                ...newSlot,
+                                selected_procedure_ids: checked
+                                  ? newSlot.selected_procedure_ids.filter((id) => id !== procedure.id)
+                                  : [...newSlot.selected_procedure_ids, procedure.id],
+                              })
+                            }
+                            className={`flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-all ${
+                              checked ? "border-gold/60 bg-gold/10" : "border-foreground/15"
+                            }`}
+                          >
+                            <span className="flex h-4 w-4 items-center justify-center border border-foreground/40">
+                              {checked && <Check className="h-3 w-3" />}
+                            </span>
+                            {procedure.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
                   <div className="mt-5 grid grid-cols-2 gap-2">
                     {[
@@ -701,7 +773,7 @@ function AdminDashboard() {
                             {formatDateShort(slot.slot_date)} · {toTimeLabel(slot.start_time)} às {toTimeLabel(slot.end_time)}
                           </div>
                           <div className="mt-1 text-sm text-muted-foreground">
-                            {slot.procedure_id ? slot.procedures?.name || "Procedimento" : "Qualquer procedimento"} ·{" "}
+                            {procedureLabelForSlot(slot)} ·{" "}
                             {slot.is_booked ? "Reservado" : slot.is_available ? "Disponível" : "Oculto"}
                           </div>
                         </div>

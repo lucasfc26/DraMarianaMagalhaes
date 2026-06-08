@@ -114,6 +114,12 @@ function buildMessage(data: Appointment) {
   ].join("\n");
 }
 
+function slotSupportsProcedure(slot: AvailabilitySlot, procedureId: string) {
+  if (slot.procedure_id) return slot.procedure_id === procedureId;
+  if (slot.allowed_procedure_ids?.length) return slot.allowed_procedure_ids.includes(procedureId);
+  return true;
+}
+
 export function Contact() {
   const [calendarMonth, setCalendarMonth] = useState(() => {
     const today = new Date();
@@ -130,10 +136,11 @@ export function Contact() {
   const [submitError, setSubmitError] = useState("");
 
   const hasSupabaseProcedures = procedureOptions.some((procedure) => procedure.id);
-  const availableDayValues = new Set(availableSlots.map((slot) => slot.slot_date));
+  const compatibleSlots = availableSlots.filter((slot) => slotSupportsProcedure(slot, form.procedureId));
+  const availableDayValues = new Set(compatibleSlots.map((slot) => slot.slot_date));
   const timeOptions =
     hasSupabaseProcedures && form.date
-      ? availableSlots
+      ? compatibleSlots
           .filter((slot) => slot.slot_date === form.date)
           .map((slot) => ({
             value: toTimeLabel(slot.start_time),
@@ -183,7 +190,7 @@ export function Contact() {
     const lastDay = days[days.length - 1].value;
 
     restFetch<AvailabilitySlot[]>(
-      `availability_slots?select=*&or=(procedure_id.is.null,procedure_id.eq.${form.procedureId})&slot_date=gte.${firstDay}&slot_date=lte.${lastDay}&is_available=eq.true&is_booked=eq.false&order=slot_date.asc,start_time.asc`,
+      `availability_slots?select=*&slot_date=gte.${firstDay}&slot_date=lte.${lastDay}&is_available=eq.true&is_booked=eq.false&order=slot_date.asc,start_time.asc`,
       {},
       undefined,
     )

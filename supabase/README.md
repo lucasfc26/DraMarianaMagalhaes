@@ -40,6 +40,15 @@ supabase secrets set SMTP_PASS=...
 supabase secrets set SMTP_FROM=staff@professionalodontosys.com.br
 ```
 
+Esses secrets são obrigatórios para o botão "Esqueci a senha". O arquivo `.env.local`
+serve apenas para o frontend do Vite; Edge Functions publicadas no Supabase não leem
+esse arquivo. Se `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` ou `SUPABASE_SERVICE_ROLE_KEY`
+não estiverem configurados nos secrets do Supabase, a função retorna:
+
+```text
+Variáveis de ambiente incompletas.
+```
+
 6. Publique as funções:
 
 ```bash
